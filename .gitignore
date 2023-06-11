@@ -33,3 +33,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#app design markups and notes
+AppIdea.md
+
+# secure env vars
+.env
