@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import User from '@/models/User'
 
 let isConnected = false
 
@@ -18,6 +19,7 @@ export const connectDB = async () => {
         } as mongoose.ConnectOptions)
         .then(() => {
             isConnected = true
+            mongoose.models.User = User
             console.log('MongoDB is connected')
             return isConnected;
         })

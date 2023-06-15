@@ -3,7 +3,6 @@ import { IUser } from "@/models/User";
 import { PopulatedDoc, ObjectId, Document } from "mongoose";
 
 export interface ITicket {
-    ticketId: number,
     title: string,
     description: string,
     createdAt: Date,
@@ -14,7 +13,6 @@ export interface ITicket {
     cost: number,
     submitterId: PopulatedDoc<Document<ObjectId> & IUser>,
     AssignedToId?: PopulatedDoc<Document<ObjectId> & IUser>,
-    itemsConsumed?: Item[],
 }
 
 export interface Item {

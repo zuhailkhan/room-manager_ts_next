@@ -1,14 +1,9 @@
-import { Schema, Document, model, models, PopulatedDoc, ObjectId } from 'mongoose';
+import { Schema, Document, model, models } from 'mongoose';
 import { ITicket } from '@/interfaces/Ticket';
-import { randomUUID } from 'crypto';
 
 interface Ticket extends ITicket, Document {}
 
 const ticketSchema: Schema = new Schema({
-    ticketId: {
-        type: Number,
-        default: () => randomUUID()
-    },
     submitterId: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -46,9 +41,6 @@ const ticketSchema: Schema = new Schema({
     cost: {
         type: Number,
     },
-    itemsConsumed: {
-        type: Array,
-    }
 }, {
     collection: 'tickets'
 })
