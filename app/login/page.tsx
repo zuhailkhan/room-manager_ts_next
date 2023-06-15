@@ -9,9 +9,8 @@ const login = ({}: IProps) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e:any) => {
-    let url = "/api/auth";
     e.preventDefault();
-    let resp = await fetch(url, {
+    let resp = await fetch('/api/auth/login', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -19,10 +18,10 @@ const login = ({}: IProps) => {
       body: JSON.stringify({
         username,
         password,
-      }),
+      })
     })
 
-    console.log(await resp.json());
+    console.log(await resp.json())
   }
 
   return (

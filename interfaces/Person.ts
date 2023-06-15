@@ -1,5 +1,9 @@
 export interface IPerson {
-    name: string;
+    username: string;
     email: string;
     password: string;
+    role: {
+        id: number,
+        name: string
+    }
 }
