@@ -45,6 +45,29 @@ export const GET = async (request: NextRequest, {params}: IParams) => {
     }
 }
 
-// export const PATCH = async (request: NextRequest, {params}: IParams) => {
+export const PATCH = async (request: NextRequest, {params}: IParams) => {
+    const body = await request.json()
+    const { id } = params
 
-// }
+    try {
+        const user: HydratedDocument<IUser> | null = await User.findById(id)
+        if(user) {
+            // user updation logic here
+        }
+        else {
+            return NextResponse.json({
+                message: "User not found"
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return NextResponse.json({
+            "message": "Something went wrong",
+            Error: error
+        }, {
+            status: 500,
+            statusText: "Internal Server Error",
+        })
+    }
+    
+}
