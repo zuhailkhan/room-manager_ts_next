@@ -1,6 +1,8 @@
+import bcrypt from 'bcryptjs';
 import { NextRequest, NextResponse } from 'next/server';
 import User, { IUser } from "@/models/User"
 import { HydratedDocument } from 'mongoose';
+import { connectDB } from '@/utils/database';
 
 interface IParams {
     params: {
@@ -46,13 +48,73 @@ export const GET = async (request: NextRequest, {params}: IParams) => {
 }
 
 export const PATCH = async (request: NextRequest, {params}: IParams) => {
-    const body = await request.json()
+    const { username, email, role, password } = await request.json()
     const { id } = params
+    if([username, email, id].some(x => !x)) {
+        return NextResponse.json({
+            message: "Invalid Request"
+        }, {
+            status: 400,
+        })
+    }
+    
+    if (role) {
+        if (typeof role !== 'object' || !Object.keys(role).length) {
+            return NextResponse.json({
+                message: "Invalid Role"
+            }, {
+                status: 400,
+            })
+        }
+    }
 
     try {
+        await connectDB();
+
         const user: HydratedDocument<IUser> | null = await User.findById(id)
         if(user) {
-            // user updation logic here
+
+            if(JSON.stringify({
+                username,
+                email,
+                role: {
+                    id: role.id,
+                    name: role.name
+                },
+            }) === JSON.stringify({
+                username: user.username,
+                email: user.email,
+                role: {
+                    id: user.role.id,
+                    name: user.role.name
+                }
+            })) {
+                return NextResponse.json({
+                    message: "Nothing to update"
+                })
+            }
+            const passwordMatch:boolean = await bcrypt.compare(password, user.password);
+            if(passwordMatch) {
+                const updatedUser = await User.updateOne({
+                    _id: id
+                }, {
+                    $set: {
+                        username,
+                        email,
+                        role
+                    }
+                })
+    
+                return NextResponse.json({
+                    updatedUser,
+                })
+            } else {
+                return NextResponse.json({
+                    message: "Invalid Password"
+                }, {
+                    status: 400
+                })
+            }
         }
         else {
             return NextResponse.json({
