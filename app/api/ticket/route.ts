@@ -9,7 +9,6 @@ export const GET = async ( request: NextRequest ) => {
     // second check authentication ?
     try {
         await connectDB();
-        console.log(models)
         const tickets: HydratedDocument<ITicket>[] = await Ticket.find({ submitterId: id }).populate({
             path: 'submitterId',
             select: 'username _id role'
