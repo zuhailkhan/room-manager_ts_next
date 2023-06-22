@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from 'react'
-
+import React, { MouseEventHandler, useEffect, useState } from 'react'
+import { signIn, useSession } from 'next-auth/react'
 export interface IProps {}
 
 const login = ({}: IProps) => {
@@ -8,20 +8,22 @@ const login = ({}: IProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e:any) => {
+  const session = useSession()
+
+  useEffect(() => {
+    console.log(session)
+  }, [session])
+
+  const handleLogin: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
-    let resp = await fetch('/api/auth/login', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      })
+
+    const res = await signIn('credentials',{
+      redirect: false,
+      username,
+      password
     })
 
-    console.log(await resp.json())
+    console.log(res);
   }
 
   return (
